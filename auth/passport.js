@@ -16,7 +16,7 @@ const generateRefreshToken = (id) => {
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'http://localhost:7000/auth/login/google/callback',
+  callbackURL: 'https://app-final-backend.onrender.com/auth/login/google/callback',
   passReqToCallback: true
 }, async (req, accessToken, refreshToken, profile, callback) => {
   const user = await AllowedUsers.findOne({ email: profile.emails[0].value });
