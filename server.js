@@ -54,6 +54,6 @@ mongoose
   .then(() => console.log('connected to dabase'))
   .catch((err) => console.error(err));
 
-server.listen(7000, () => console.log('server running...'));
+server.listen(process.env.PORT);
 
 module.exports = { Event }
