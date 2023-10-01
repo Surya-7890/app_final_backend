@@ -5,8 +5,10 @@ const router = express.Router();
 const { Event } = require('../server');
 const { bookARoom } = require('../functions/book');
 const { format } = require('../functions/formatString');
+const { isHod } = require('../middlewares/hod');
+const { isUser } = require('../middlewares/user');
 
-router.get('/initial/mobile', async (req, res) => {
+router.get('/initial/mobile', isUser, async (req, res) => {
   try {
     const room = await Room
       .find({})
@@ -17,7 +19,7 @@ router.get('/initial/mobile', async (req, res) => {
   }
 });
 
-router.post('/approve/booking', async (req, res) => {
+router.post('/approve/booking', isHod, async (req, res) => {
   try {
     const room = await bookARoom(req.body);
     if (room?.message !== 'Success') {
@@ -31,7 +33,7 @@ router.post('/approve/booking', async (req, res) => {
   }
 })
 
-router.post('/request/booking', async (req, res) => {
+router.post('/request/booking', isUser, async (req, res) => {
   const { from, to, name, email, reason, department } = req.body;
   try {
     const allocatedTime = format(from, to);
@@ -47,7 +49,7 @@ router.post('/request/booking', async (req, res) => {
   }
 });
 
-router.post('/hod/book', async (req, res) => {
+router.post('/hod/book', isHod, async (req, res) => {
   const { name, email, from, to, reason } = req.body;
   try {
     const allocatedTime = format(from, to);
