@@ -1,4 +1,4 @@
-const { months } = require('../utils/month.js');
+const { scheduler } = require('./scheduler')
 const Room = require('../models/room');
 
 const bookARoom = async (input) => {
@@ -13,13 +13,7 @@ const bookARoom = async (input) => {
         room.waiting = [];
         await room.save();
         // function to add scheduler
-        room.AddScheduler({
-            hour: Number(toHour),
-            minute: Number(toMinute),
-            date: Number(toDate),
-            month: months[toMonth],
-            year: Number(toYear)
-        })
+        await scheduler(room, input.allocatedTime)
         return { 
             message: 'Success',
             data: room

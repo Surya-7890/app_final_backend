@@ -67,6 +67,10 @@ router.post('/hod/book', isHod, async (req, res) => {
   } catch (error) {
     res.json({ message: error.message });
   }
+});
+
+router.get('/get-booked', isUser, async (req, res) => {
+  console.log(req.staff?.email)
 })
 
 module.exports = router;

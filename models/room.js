@@ -42,6 +42,7 @@ const RoomSchema = new Schema({
 });
 
 RoomSchema.methods.AddScheduler = function(to) {
+  console.log(to);
   scheduler.scheduleJob(
     { ...to, tz: 'Asia/Kolkata' }, 
     async () => {
@@ -51,6 +52,7 @@ RoomSchema.methods.AddScheduler = function(to) {
     this.reason = '';
     this.approvedBy = '',
     this.isMaintenanceRequired = false
+    console.log('hi da');
     await this.save();
     Event.emit('free', { id: this.id })
   });
