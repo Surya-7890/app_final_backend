@@ -55,9 +55,14 @@ router.post('/hod/book', isHod, async (req, res) => {
   const email = req.email;
   try {
     const allocatedTime = format(from, to);
-    let room = await Room.findOne({ name });
-    room = { ...room, bookedBy: email, approvedBy: email, reason, allocatedTime, isAvailable: false, waiting: [] }
-    await room.save();
+    const room = await Room.findOne({ name });
+    room.bookedBy = email;
+    room.approvedBy = email,
+    room.allocatedTime = allocatedTime;
+    room.isAvailable = false;
+    room.waiting = [];
+    room.reason = reason;
+    await room.save()
     res.status(200).json({ message: 'Success', data: room });
   } catch (error) {
     res.json({ message: error.message });
