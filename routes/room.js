@@ -7,6 +7,7 @@ const { bookARoom } = require('../functions/book');
 const { format } = require('../functions/formatString');
 const { isHod } = require('../middlewares/hod');
 const { isUser } = require('../middlewares/user');
+const { scheduler } = require('../functions/scheduler');
 
 router.get('/initial/mobile', isUser, async (req, res) => {
   try {
@@ -62,6 +63,7 @@ router.post('/hod/book', isHod, async (req, res) => {
     room.isAvailable = false;
     room.waiting = [];
     room.reason = reason;
+    await scheduler(room, allocatedTime);
     await room.save()
     res.status(200).json({ message: 'Success', data: room });
   } catch (error) {
@@ -71,6 +73,14 @@ router.post('/hod/book', isHod, async (req, res) => {
 
 router.get('/get-booked', isUser, async (req, res) => {
   console.log(req.staff?.email)
+  const { email, role } = req.staff;
+  try {
+    if (role === 'hod') {
+
+    }
+  } catch (error) {
+    
+  }
 })
 
 module.exports = router;
