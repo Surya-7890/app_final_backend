@@ -34,7 +34,8 @@ router.post('/approve/booking', isHod, async (req, res) => {
 })
 
 router.post('/request/booking', isUser, async (req, res) => {
-  const { from, to, name, email, reason, department } = req.body;
+  const { from, to, name, reason } = req.body;
+  const { email, department } = req.staff;
   try {
     const allocatedTime = format(from, to);
     const data = { allocatedTime, name, email, reason };
@@ -50,7 +51,8 @@ router.post('/request/booking', isUser, async (req, res) => {
 });
 
 router.post('/hod/book', isHod, async (req, res) => {
-  const { name, email, from, to, reason } = req.body;
+  const { name, from, to, reason } = req.body;
+  const email = req.email;
   try {
     const allocatedTime = format(from, to);
     const room = await Room.findOne({ name });
