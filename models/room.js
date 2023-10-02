@@ -41,7 +41,7 @@ const RoomSchema = new Schema({
   }
 });
 
-RoomSchema.methods.AddScheduler = function(to) {
+RoomSchema.methods.AddScheduler = function(to, io) {
   console.log(to);
   scheduler.scheduleJob(
     { ...to, tz: 'Asia/Kolkata' }, 
@@ -54,7 +54,7 @@ RoomSchema.methods.AddScheduler = function(to) {
     this.isMaintenanceRequired = false
     console.log('hi da');
     await this.save();
-    Event.emit('free', { id: this.id })
+    io.emit('free', { id: this.id })
   });
 }
 

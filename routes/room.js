@@ -21,8 +21,9 @@ router.get('/initial/mobile', isUser, async (req, res) => {
 });
 
 router.post('/approve/booking', isHod, async (req, res) => {
+  const io = req.app.get('socket')
   try {
-    const room = await bookARoom(req.body);
+    const room = await bookARoom(req.body, io);
     if (room?.message !== 'Success') {
       res.json({ error: room })
     } else {
@@ -54,6 +55,7 @@ router.post('/request/booking', isUser, async (req, res) => {
 router.post('/hod/book', isHod, async (req, res) => {
   const { name, from, to, reason } = req.body;
   const email = req.email;
+  const io = req.app.get('socket')
   try {
     const allocatedTime = format(from, to);
     const room = await Room.findOne({ name });
@@ -63,7 +65,7 @@ router.post('/hod/book', isHod, async (req, res) => {
     room.isAvailable = false;
     room.waiting = [];
     room.reason = reason;
-    await scheduler(room, allocatedTime);
+    await scheduler(room, allocatedTime, io);
     await room.save()
     res.status(200).json({ message: 'Success', data: room });
   } catch (error) {

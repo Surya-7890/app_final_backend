@@ -46,6 +46,7 @@ app.use(cors({ origin: '*' }));
 app.use('/auth', AuthRouter);
 app.use('/rooms', RoomRouter);
 app.use('/admin', AdminRouter);
+app.set('socket', io)
 app.use(passport.initialize());
 
 mongoose

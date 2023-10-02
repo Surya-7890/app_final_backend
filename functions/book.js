@@ -1,7 +1,7 @@
 const { scheduler } = require('./scheduler')
 const Room = require('../models/room');
 
-const bookARoom = async (input) => {
+const bookARoom = async (input, io) => {
     try {
         const room = await Room.findOne({ name: input.name });
 
@@ -13,7 +13,7 @@ const bookARoom = async (input) => {
         room.waiting = [];
         await room.save();
         // function to add scheduler
-        await scheduler(room, input.allocatedTime)
+        await scheduler(room, input.allocatedTime, io)
         return { 
             message: 'Success',
             data: room

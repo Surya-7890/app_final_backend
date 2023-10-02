@@ -1,6 +1,6 @@
 const { months } = require('../utils/month')
 
-const scheduler = async (room, allocatedTime) => {
+const scheduler = async (room, allocatedTime, io) => {
   console.log(allocatedTime);
   const from = allocatedTime.split(' to ')[0]
     const to = allocatedTime.split(' to ')[1]
@@ -25,7 +25,7 @@ const scheduler = async (room, allocatedTime) => {
         date: Number(toDate),
         month: months[toMonth],
         year: Number(toYear)
-    })
+    }, io)
 }
 
 module.exports = { scheduler }
