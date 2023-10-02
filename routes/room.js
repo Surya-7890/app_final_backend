@@ -73,14 +73,12 @@ router.post('/hod/book', isHod, async (req, res) => {
 });
 
 router.get('/get-booked', isUser, async (req, res) => {
-  console.log(req.staff?.email)
-  const { email, role } = req.staff;
+  const { email } = req.staff;
   try {
-    if (role === 'hod') {
-
-    }
+    const data = await Room.find({ bookedBy: email });
+    res.json({ message: 'Success', data });
   } catch (error) {
-    
+    res.json({ message: error.message });
   }
 })
 
