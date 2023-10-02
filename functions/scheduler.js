@@ -2,7 +2,7 @@ const { months } = require('../utils/month')
 
 const scheduler = async (room, allocatedTime) => {
   const from = allocatedTime.split('to')[0]
-    const to = allocatedTime.split('to')[0]
+    const to = allocatedTime.split('to')[1]
     let [ fromDate, fromMonth, fromYear, fromTime] = from.split(' ');
     let [ toDate, toMonth, toYear, toTime ] = to.split(' ');
     
