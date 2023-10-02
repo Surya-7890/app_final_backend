@@ -15,7 +15,7 @@ router.get('/initial/mobile', isUser, async (req, res) => {
       .select({ name: 1, isAvailable: 1, isMaintenanceRequired: 1, allocatedTime: 1 });
       res.json({ data: room, message: "Success" });
   } catch (error) {
-    res.status(400).json({ message: error.message })
+    res.status(400).json({ message: error.message });
   }
 });
 

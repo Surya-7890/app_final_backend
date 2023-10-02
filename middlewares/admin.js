@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken');
-const Hod = require('../models/hod');
+const Admin = require('../models/admin');
 
-const isHod = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   try {
     const auth = req.headers['authorization']
-    const token = auth.split(' ')[1]
+    const token = auth?.split(' ')[1];
     if (!token) return res.status(401)
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, token) => {
       if (err) return res.json({ message: err.message })
-      if (!(await Hod.findById(token))) return res.status(403)
+      const admin = await Admin.findById(token.id)
+      if (!admin) return res.status(403)
       next()
     })
   } catch (error) {
@@ -16,4 +17,4 @@ const isHod = (req, res, next) => {
   }
 }
 
-module.exports = { isHod }
+module.exports = { isAdmin }

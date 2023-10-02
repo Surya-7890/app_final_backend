@@ -26,6 +26,7 @@ require('./auth/passport');
 
 const AuthRouter = require('./routes/auth');
 const RoomRouter = require('./routes/room');
+const AdminRouter = require('./routes/admin');
 
 
 
@@ -44,6 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors({ origin: '*' }));
 app.use('/auth', AuthRouter);
 app.use('/rooms', RoomRouter);
+app.use('/admin', AdminRouter);
 app.use(passport.initialize());
 
 mongoose
@@ -54,6 +56,6 @@ mongoose
   .then(() => console.log('connected to dabase'))
   .catch((err) => console.error(err));
 
-server.listen(process.env.PORT);
+server.listen(process.env.PORT || 7000);
 
 module.exports = { Event }
