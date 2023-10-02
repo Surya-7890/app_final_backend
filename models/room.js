@@ -1,6 +1,5 @@
 const { Schema, model } = require('mongoose');
 const scheduler = require('node-schedule');
-const { Event } = require('../server')
 
 const RoomSchema = new Schema({
   name: {

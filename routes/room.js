@@ -2,7 +2,6 @@ const express = require('express');
 const Room = require('../models/room');
 const Hod = require('../models/hod');
 const router = express.Router();
-const { Event } = require('../server');
 const { bookARoom } = require('../functions/book');
 const { format } = require('../functions/formatString');
 const { isHod } = require('../middlewares/hod');
@@ -27,7 +26,7 @@ router.post('/approve/booking', isHod, async (req, res) => {
     if (room?.message !== 'Success') {
       res.json({ error: room })
     } else {
-      Event.emit('booked', room.data) // to be handled
+      io.emit('booked', room.data)
       res.json({ message: 'Success', room: room.data });
     }
   } catch (error) {

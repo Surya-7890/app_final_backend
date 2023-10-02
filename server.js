@@ -36,10 +36,6 @@ const AdminRouter = require('./routes/admin');
  * to the clients listening 
  */
 
-const Event = new EventEmitter();
-Event.addListener('free', (id) => io.emit('free', id))
-Event.addListener('booked', (data) => io.emit('booked', data))
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({ origin: '*' }));
