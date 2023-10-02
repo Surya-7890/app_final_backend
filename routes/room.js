@@ -60,7 +60,7 @@ router.post('/hod/book', isHod, async (req, res) => {
     await room.save();
     res.status(200).json({ message: 'Success', data: room });
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    res.json({ message: error.message });
   }
 })
 
