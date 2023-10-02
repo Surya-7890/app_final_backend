@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Staff = require('../models/staff');
+const Hod = require('../models/hod');
 
 const isUser = (req, res, next) => {
   try {
@@ -10,9 +11,13 @@ const isUser = (req, res, next) => {
       if (req.url !== '/refresh-token') {
         if (err) return res.json({ message: err.message })
         const user = await Staff.findById(decoded.id);
-        if (!user) return res.json({ message: 'User Not Found' });
-        req.staff = { email: user.email, department: user.department }
-        return next()
+        if (!user) {
+          const hod = await Hod.findById(decoded.id);
+          req.staff = { email: hod.email, department: hod.department }
+        } else {
+          req.staff = { email: user.email, department: user.department }
+          return next()
+        }
       }
       const { payload } = jwt.decode(token, { complete: true, json: true });
       req.token = payload.id;
