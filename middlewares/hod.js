@@ -8,7 +8,7 @@ const isHod = (req, res, next) => {
     if (!token) return res.status(401)
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, token) => {
       if (err) return res.json({ message: err.message })
-      const hod = await Hod.findById(token)
+      const hod = await Hod.findById(token.id)
       if (!hod) return res.status(403)
       req.email = hod.email;
       next()
