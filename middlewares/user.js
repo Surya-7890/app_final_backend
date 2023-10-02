@@ -9,7 +9,7 @@ const isUser = (req, res, next) => {
     if (!token) return res.status(401)
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
       if (req.url !== '/refresh-token') {
-        if (err) return res.json({ message: err.message })
+        if (err) return res.json({ message: err.message });
         const user = await Staff.findById(decoded.id);
         if (!user) {
           const hod = await Hod.findById(decoded.id);
