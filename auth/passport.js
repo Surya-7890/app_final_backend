@@ -38,11 +38,11 @@ passport.use(new GoogleStrategy({
         const newUser = await Staffs.create(data);
         const accessToken = generateAccessToken({ id: newUser.id });
         const refreshToken = generateRefreshToken({ id: newUser.id });
-        return callback(null, { accessToken, refreshToken, role: 'staff' });
+        return callback(null, { accessToken, refreshToken, role: 'staff', image: profile.photos[0].value });
       } else {
         const accessToken = generateAccessToken({ id: staff.id });
         const refreshToken = generateRefreshToken({ id: staff.id });
-        return callback(null, { accessToken, refreshToken, role: 'staff' });
+        return callback(null, { accessToken, refreshToken, role: 'staff', image: profile.photos[0].value });
       }
     } else if (user.role === 'hod') {
       const hod = await Hod.findOne({ email: user?.email });
@@ -50,11 +50,11 @@ passport.use(new GoogleStrategy({
         const newUser = await Hod.create(data);
         const accessToken = generateAccessToken({ id: newUser.id });
         const refreshToken = generateRefreshToken({ id: newUser.id });
-        return callback(null, { accessToken, refreshToken, role: 'hod' });
+        return callback(null, { accessToken, refreshToken, role: 'hod', image: profile.photos[0].value });
       } else {
         const accessToken = generateAccessToken({ id: hod.id });
         const refreshToken = generateRefreshToken({ id: hod.id });
-        return callback(null, { accessToken, refreshToken, role: 'hod' });
+        return callback(null, { accessToken, refreshToken, role: 'hod', image: profile.photos[0].value });
       }
     }
     } catch (error) {
