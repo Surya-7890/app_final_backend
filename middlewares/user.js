@@ -13,9 +13,9 @@ const isUser = (req, res, next) => {
         const user = await Staff.findById(decoded.id);
         if (!user) {
           const hod = await Hod.findById(decoded.id);
-          req.staff = { email: hod.email, department: hod.department }
+          req.staff = { email: hod.email, department: hod.department, role: 'hod' }
         } else {
-          req.staff = { email: user.email, department: user.department }
+          req.staff = { email: user.email, department: user.department, role: 'staff' }
           return next()
         }
       }
