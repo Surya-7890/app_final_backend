@@ -75,16 +75,27 @@ router.post('/hod/book', isHod, async (req, res) => {
 router.get('/get-booked', isUser, async (req, res) => {
   const { email, role } = req.staff;
   try {
-    const data = await Room.find({ bookedBy: email });
     if (role === 'hod') {
+      const data = await Room.find({ approvedBy: email });
       const notifications = await Hod.findOne({ email });
       res.json({ message: 'Success', data, notifications: notifications.notifications.length })
     } else {
+      const data = await Room.find({ bookedBy: email });
       res.json({ message: 'Success', data });
     }
   } catch (error) {
     res.json({ message: error.message });
   }
 });
+
+router.get('/notifications', isHod, async (req, res) => {
+  const email = req.email;
+  try {
+    const data = await Hod.findOne({ email });
+    res.json({ message: 'Success', data: data.notifications })
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+})
 
 module.exports = router;
