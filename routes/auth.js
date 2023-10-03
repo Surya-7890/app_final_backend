@@ -49,4 +49,28 @@ router.get('/refresh-token', isUser, async (req, res) => {
   }
 })
 
+router.post('/validate/refresh-token', async (req, res) => {
+  const auth = req.headers['authorization'];
+  const token = auth?.split(' ')[1]
+  try {
+    if (!auth) return res.json({ message: 'Token Not Found' });
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        if (err.message === 'jwt expired') {
+          const decodedToken = jwt.decode(token, {complete: true, json: true});
+          const accessToken = jwt.sign(decodedToken.id)
+          const refreshToken = jwt.sign(decodedToken.id)
+          res.json({ accessToken, refreshToken });
+        } else {
+          res.json({ message: err.message })
+        }
+      } else {
+        res.json({ message: 'Token Valid' })
+      }
+    })
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+})
+
 module.exports = router;
