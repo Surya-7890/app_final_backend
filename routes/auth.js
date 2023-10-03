@@ -10,7 +10,7 @@ router.get('/login/google', passport.authenticate('google', { scope: ['profile',
 
 router.get('/login/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
   res.redirect(`sece://booking/${req?.user?.accessToken}/${req?.user?.refreshToken}/${req?.user?.role}imagehere${req?.user?.image}`)
-});
+})
 
 router.post('/add/admin', async (req, res) => {
   const { username, password } = req.body;
