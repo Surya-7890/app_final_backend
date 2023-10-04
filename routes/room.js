@@ -95,7 +95,8 @@ router.post('/hod/book', isHod, async (req, res) => {
     room.waiting = [];
     room.reason = reason;
     await scheduler(room, allocatedTime, io);
-    await room.save()
+    await room.save();
+    io.emit('booked', { data: room })
     res.status(200).json({ message: 'Success', data: room });
   } catch (error) {
     res.json({ message: error.message });
