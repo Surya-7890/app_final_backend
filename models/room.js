@@ -53,7 +53,7 @@ RoomSchema.methods.AddScheduler = function(to, io) {
     this.isMaintenanceRequired = false
     console.log('hi da');
     await this.save();
-    io.emit('free', { id: this.id })
+    io.emit('free', { data: this })
   });
 }
 

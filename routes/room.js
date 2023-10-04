@@ -36,7 +36,7 @@ router.post('/approve/booking', isHod, async (req, res) => {
     room.bookedBy = data?.email;
     room.reason = data?.reason;
     await scheduler(room, data?.allocatedTimeio, io);
-    io.emit('booked', result.data)
+    io.emit('booked', { data: result.data })
     res.json({ message: 'Success', room: result.data });
   } catch (error) {
     res.json({ message: error.message })
