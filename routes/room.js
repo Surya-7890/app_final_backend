@@ -27,13 +27,15 @@ router.post('/approve/booking', isHod, async (req, res) => {
   try {
     const room = await Room.findOne({ name });
     const data = room.waiting.find(prev => prev.username === username);
+    const hod = await Hod.findOne({ email });
+    hod.notifications.filter(prev => prev.username === username)
     room.isAvailable = false;
-    room.allocatedTime = data.allocatedTime;
+    room.allocatedTime = data?.allocatedTime;
     room.waiting.filter(prev => prev.username !== username);
     room.approvedBy = email;
-    room.bookedBy = data.email;
-    room.reason = data.reason;
-    await scheduler(room, data.allocatedTimeio, io);
+    room.bookedBy = data?.email;
+    room.reason = data?.reason;
+    await scheduler(room, data?.allocatedTimeio, io);
     io.emit('booked', result.data)
     res.json({ message: 'Success', room: result.data });
   } catch (error) {
@@ -43,11 +45,15 @@ router.post('/approve/booking', isHod, async (req, res) => {
 
 router.post('/reject/booking', isHod, async (req, res) => {
    const { username, name } = req.body;
+   const email = req.email;
    try {
     const room = await Room.findOne({ name });
+    const hod = await Hod.findOne({ email });
+    hod.notifications.filter(prev => prev.username === username)
     console.log(room)
     room?.waiting?.filter(user => user.username !== username)
     await room.save();
+    await hod.save()
     res.json({ message: 'Success', data: room });
   } catch (error) {
     res.json({ message: error.message });
@@ -66,6 +72,7 @@ router.post('/request/booking', isUser, async (req, res) => {
     const hod = await Hod.findOne({ department });
     hod.notifications.push({ ...data, image: staff.image, username: staff.name});
     await hod.save();
+    await room.save();
     res.json({ message: 'Success' });
   } catch (error) {
     res.json({ message: error.message });
