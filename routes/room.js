@@ -48,10 +48,13 @@ router.post('/reject/booking', isHod, async (req, res) => {
    const email = req.email;
    try {
     const room = await Room.findOne({ name });
-    const hod = await Hod.findOne({ email });
-    hod.notifications.filter(prev => prev.username !== username)
     room?.waiting?.filter(user => user.username !== username)
     await room.save();
+    const hod = await Hod.findOne({ email });
+    hod.notifications.filter(prev => {
+      console.log(prev)
+      return prev.username !== username
+    })
     await hod.save();
     res.json({ message: 'Success', data: hod });
   } catch (error) {
