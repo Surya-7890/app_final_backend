@@ -33,7 +33,19 @@ router.post('/approve/booking', isHod, async (req, res) => {
   } catch (error) {
     
   }
-})
+});
+
+router.post('/reject/booking', isHod, async (req, res) => {
+   const { username, name } = req.body;
+   try {
+    const room = await Room.findOne({ name });
+    room.waiting.filter(user => user.username !== username)
+    await room.save();
+    res.json({ message: 'Success', data: room });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+});
 
 router.post('/request/booking', isUser, async (req, res) => {
   const { from, to, name, reason } = req.body;
