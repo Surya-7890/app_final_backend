@@ -21,17 +21,23 @@ router.get('/initial/mobile', isUser, async (req, res) => {
 });
 
 router.post('/approve/booking', isHod, async (req, res) => {
-  const io = req.app.get('socket')
+  const io = req.app.get('socket');
+  const { name, username } = req.body;
+  const email = req.email;
   try {
-    const room = await bookARoom(req.body, io);
-    if (room?.message !== 'Success') {
-      res.json({ error: room })
-    } else {
-      io.emit('booked', room.data)
-      res.json({ message: 'Success', room: room.data });
-    }
+    const room = await Room.findOne({ name });
+    const data = room.waiting.find(prev => prev.username === username);
+    room.isAvailable = false;
+    room.allocatedTime = data.allocatedTime;
+    room.waiting.filter(prev => prev.username !== username);
+    room.approvedBy = email;
+    room.bookedBy = data.email;
+    room.reason = data.reason;
+    await scheduler(room, data.allocatedTimeio, io);
+    io.emit('booked', result.data)
+    res.json({ message: 'Success', room: result.data });
   } catch (error) {
-    
+    res.json({ message: error.message })
   }
 });
 
@@ -53,7 +59,7 @@ router.post('/request/booking', isUser, async (req, res) => {
   try {
     const staff = await Staff.findOne({ email });
     const allocatedTime = format(from, to);
-    const data = { allocatedTime, name, reason };
+    const data = { allocatedTime, name, reason, email };
     const room = await Room.findOne({ name });
     room.waiting.push({ email, allocatedTime });
     const hod = await Hod.findOne({ department });
