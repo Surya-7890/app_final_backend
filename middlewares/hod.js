@@ -11,6 +11,7 @@ const isHod = (req, res, next) => {
       const hod = await Hod.findById(token.id)
       if (!hod) return res.status(403)
       req.email = hod.email;
+      req.id = token.id;
       next()
     })
   } catch (error) {

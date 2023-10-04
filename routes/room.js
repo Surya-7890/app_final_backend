@@ -7,6 +7,7 @@ const { format } = require('../functions/formatString');
 const { isHod } = require('../middlewares/hod');
 const { isUser } = require('../middlewares/user');
 const { scheduler } = require('../functions/scheduler');
+const Staff = require('../models/staff');
 
 router.get('/initial/mobile', isUser, async (req, res) => {
   try {
@@ -38,12 +39,13 @@ router.post('/request/booking', isUser, async (req, res) => {
   const { from, to, name, reason } = req.body;
   const { email, department } = req.staff;
   try {
+    const staff = await Staff.findOne({ email });
     const allocatedTime = format(from, to);
-    const data = { allocatedTime, name, email, reason };
+    const data = { allocatedTime, name, reason };
     const room = await Room.findOne({ name });
     room.waiting.push({ email, allocatedTime });
     const hod = await Hod.findOne({ department });
-    hod.notifications.push(data);
+    hod.notifications.push({ ...data, image: staff.image, username: staff.name});
     await hod.save();
     res.json({ message: 'Success' });
   } catch (error) {
@@ -114,6 +116,16 @@ router.post('/cancel', isUser, async (req, res) => {
     room.waiting = [];
     await room.save();
     res.json({ message: 'Success', data: room });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+});
+
+router.get('/hod/notifications', isHod,async (req, res) => {
+  const id = req.id;
+  try {
+    const notifications = await Hod.findById(id).select({ notifications: 1 });
+    res.json({ message: 'Success', data: notifications });
   } catch (error) {
     res.json({ message: error.message });
   }
