@@ -28,7 +28,7 @@ router.post('/approve/booking', isHod, async (req, res) => {
     const room = await Room.findOne({ name });
     const data = room.waiting.find(prev => prev.username === username);
     const hod = await Hod.findOne({ email });
-    hod.notifications.filter(prev => prev.username === username)
+    hod.notifications.filter(prev => prev.username !== username)
     room.isAvailable = false;
     room.allocatedTime = data?.allocatedTime;
     room.waiting.filter(prev => prev.username !== username);
@@ -49,7 +49,7 @@ router.post('/reject/booking', isHod, async (req, res) => {
    try {
     const room = await Room.findOne({ name });
     const hod = await Hod.findOne({ email });
-    hod.notifications.filter(prev => prev.username === username)
+    hod.notifications.filter(prev => prev.username !== username)
     room?.waiting?.filter(user => user.username !== username)
     await room.save();
     await hod.save()
