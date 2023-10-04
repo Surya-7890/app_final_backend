@@ -96,6 +96,27 @@ router.get('/notifications', isHod, async (req, res) => {
   } catch (error) {
     res.json({ message: error.message });
   }
+});
+
+router.post('/cancel', isUser, async (req, res) => {
+  const { email } = req.staff;
+  const { id } = req.body;
+  try {
+    const room = await Room.findById(id);
+    if (room.bookedBy !== email) {
+      return res.json({ message: 'You Are Not Authorized' });
+    }
+    room.isAvailable = true;
+    room.bookedBy = '';
+    room.approvedBy = '';
+    room.allocatedTime = '';
+    room.reason = '';
+    room.waiting = [];
+    await room.save();
+    res.json({ message: 'Success', data: room });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
 })
 
 module.exports = router;
