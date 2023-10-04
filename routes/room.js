@@ -125,7 +125,7 @@ router.get('/hod/notifications', isHod,async (req, res) => {
   const id = req.id;
   try {
     const notifications = await Hod.findById(id).select({ notifications: 1 });
-    res.json({ message: 'Success', data: notifications });
+    res.json({ message: 'Success', data: notifications.notifications });
   } catch (error) {
     res.json({ message: error.message });
   }
