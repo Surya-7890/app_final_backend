@@ -20,6 +20,10 @@ const staffSchema = new Schema({
   image: {
     type: String,
     required: [true, 'Image Is Required']
+  },
+  waiting: {
+    type: Array,
+    default: []
   }
 });
 

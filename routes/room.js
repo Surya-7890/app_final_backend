@@ -158,6 +158,21 @@ router.get('/hod/notifications', isHod,async (req, res) => {
   } catch (error) {
     res.json({ message: error.message });
   }
+});
+
+router.post('/cancel/request', isUser, async (req, res) => {
+  const { name } = req.body;
+  try {
+    const room = await Room.findOne({ name });
+    room.waiting = room.waiting.filter(user => user.email !== req.staff.email);
+    await room.save();
+    const staff = await Staff.findOne({ email: req.staff.email });
+    staff.waiting = staff.waiting.filter(room => room.name !== name);
+    await staff.save();
+    res.json({ message: 'Success' });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
 })
 
 module.exports = router;
