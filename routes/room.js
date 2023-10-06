@@ -68,6 +68,7 @@ router.post('/request/booking', isUser, async (req, res) => {
   try {
     const staff = await Staff.findOne({ email });
     const allocatedTime = format(from, to);
+    staff.waiting.push({ name, allocatedTime })
     const data = { allocatedTime, name, reason, email };
     const room = await Room.findOne({ name });
     room.waiting.push({ email, allocatedTime });
@@ -169,6 +170,9 @@ router.post('/cancel/request', isUser, async (req, res) => {
     const staff = await Staff.findOne({ email: req.staff.email });
     staff.waiting = staff.waiting.filter(room => room.name !== name);
     await staff.save();
+    const hod = await Hod.findOne({ department: staff.department });
+    hod.notifications.filter(notification => (notification.name !== room.name && notification.username !== staff.name))
+    await hod.save()
     res.json({ message: 'Success' });
   } catch (error) {
     res.json({ message: error.message });
